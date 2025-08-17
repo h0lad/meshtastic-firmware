@@ -153,8 +153,8 @@
 #define HW_VENDOR meshtastic_HardwareModel_ESP32_S3_PICO
 #elif defined(SENSELORA_S3)
 #define HW_VENDOR meshtastic_HardwareModel_SENSELORA_S3
-#elif defined(HELTEC_HT62)
-#define HW_VENDOR meshtastic_HardwareModel_HELTEC_HT62
+#elif defined(SOLARMESHTASTICNODE)
+#define HW_VENDOR meshtastic_HardwareModel_PRIVATE_HW
 #elif defined(CHATTER_2)
 #define HW_VENDOR meshtastic_HardwareModel_CHATTER_2
 #elif defined(STATION_G2)
