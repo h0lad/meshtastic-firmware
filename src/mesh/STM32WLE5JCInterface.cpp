@@ -23,6 +23,10 @@ bool STM32WLE5JCInterface::init()
     setTCXOVoltage(1.7);
 #endif
 
+#if (!defined(_VARIANT_LORAHARVESTERNODE_))
+    setTCXOVoltage(0.0);
+#endif
+
     lora.setRfSwitchTable(rfswitch_pins, rfswitch_table);
 
     limitPower(STM32WLx_MAX_POWER);
