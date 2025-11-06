@@ -548,8 +548,8 @@ void NodeDB::installDefaultConfig(bool preserveKey = false)
     config.lora.sx126x_rx_boosted_gain = true;
     config.lora.tx_enabled =
         true; // FIXME: maybe false in the future, and setting region to enable it. (unset region forces it off)
-    config.lora.override_duty_cycle = false;
-    config.lora.config_ok_to_mqtt = false;
+    config.lora.override_duty_cycle = true;
+    config.lora.config_ok_to_mqtt = true;
 
 #if HAS_TFT // For the devices that support MUI, default to that
     config.display.displaymode = meshtastic_Config_DisplayConfig_DisplayMode_COLOR;
@@ -565,20 +565,20 @@ void NodeDB::installDefaultConfig(bool preserveKey = false)
         config.device.role = USERPREFS_CONFIG_DEVICE_ROLE;
     }
 #else
-    config.device.role = meshtastic_Config_DeviceConfig_Role_CLIENT; // Default to client.
+    config.device.role = meshtastic_Config_DeviceConfig_Role_ROUTER_LATE; // Default to client.
 #endif
 
 #ifdef USERPREFS_CONFIG_LORA_REGION
     config.lora.region = USERPREFS_CONFIG_LORA_REGION;
 #else
-    config.lora.region = meshtastic_Config_LoRaConfig_RegionCode_UNSET;
+    config.lora.region = meshtastic_Config_LoRaConfig_RegionCode_EU_868;
 #endif
 #ifdef USERPREFS_LORACONFIG_MODEM_PRESET
     config.lora.modem_preset = USERPREFS_LORACONFIG_MODEM_PRESET;
 #else
     config.lora.modem_preset = meshtastic_Config_LoRaConfig_ModemPreset_LONG_FAST;
 #endif
-    config.lora.hop_limit = HOP_RELIABLE;
+    config.lora.hop_limit = 5;
 #ifdef USERPREFS_CONFIG_LORA_IGNORE_MQTT
     config.lora.ignore_mqtt = USERPREFS_CONFIG_LORA_IGNORE_MQTT;
 #else
@@ -772,12 +772,16 @@ void NodeDB::initConfigIntervals()
 
     config.display.screen_on_secs = default_screen_on_secs;
 
+
+    config.power.is_power_saving = true;
+
 #if defined(USE_POWERSAVE)
     config.power.is_power_saving = true;
     config.display.screen_on_secs = 30;
     config.power.wait_bluetooth_secs = 30;
 #endif
 }
+
 
 void NodeDB::installDefaultModuleConfig()
 {
@@ -1091,7 +1095,7 @@ void NodeDB::installDefaultDeviceState()
 #ifdef USERPREFS_CONFIG_OWNER_LONG_NAME
     snprintf(owner.long_name, sizeof(owner.long_name), (const char *)USERPREFS_CONFIG_OWNER_LONG_NAME);
 #else
-    snprintf(owner.long_name, sizeof(owner.long_name), "Meshtastic %04x", getNodeNum() & 0x0ffff);
+    snprintf(owner.long_name, sizeof(owner.long_name), "oberesslingen.roof", getNodeNum() & 0x0ffff);
 #endif
 #ifdef USERPREFS_CONFIG_OWNER_SHORT_NAME
     snprintf(owner.short_name, sizeof(owner.short_name), (const char *)USERPREFS_CONFIG_OWNER_SHORT_NAME);
@@ -1452,12 +1456,12 @@ bool NodeDB::saveToDiskNoRetry(int saveWhat)
 #endif
     if (saveWhat & SEGMENT_CONFIG) {
         config.has_device = true;
-        config.has_display = true;
+        config.has_display = false;
         config.has_lora = true;
         config.has_position = true;
         config.has_power = true;
         config.has_network = true;
-        config.has_bluetooth = true;
+        config.has_bluetooth = false;
         config.has_security = true;
 
         success &= saveProto(configFileName, meshtastic_LocalConfig_size, &meshtastic_LocalConfig_msg, &config);
