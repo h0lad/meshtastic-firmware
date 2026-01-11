@@ -23,7 +23,7 @@ bool STM32WLE5JCInterface::init()
     setTCXOVoltage(1.7);
 #endif
 
-#if (!defined(_VARIANT_LORAHARVESTERNODE_))
+#if (!defined(_VARIANT_LORAHARVESTERBOX_))
     setTCXOVoltage(0.0);
 #endif
 
